@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .forms import TranslationForm
 import deepl
-from django.conf import settings
+import os
 
 # Create your views here.
 
@@ -25,7 +25,7 @@ def index(request):
         if form.is_valid():
             # 翻訳
             # TODO: 認証キーのハードコーディングは避ける
-            translator = deepl.Translator(settings.DEEPL_AUTH_KEY)
+            translator = deepl.Translator(os.getenv('DEEPL_AUTH_KEY'))
 
             # 翻訳文を取得
             sentence  = form.cleaned_data['sentence']
@@ -39,7 +39,7 @@ def index(request):
     else:
         form = TranslationForm()
 
-    template = loader.get_template(r'translation\Index.html')
+    template = loader.get_template(r'translation/Index.html')
     context = {
         'form': form,
         'translation_results':translation_results
